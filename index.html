@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analysis-Reporting System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            width: 250px;
+            position: fixed;
+            padding-top: 20px;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .nav-link.active {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        .submenu .nav-link {
+            padding-left: 2rem;
+            font-size: 0.95rem;
+        }
+        .card-header {
+            background-color: #fff;
+            border-bottom: none;
+        }
+        .btn-custom {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+        .btn-custom:hover {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
+        .tooltip-inner {
+            max-width: 200px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar p-3">
+            <h4 class="mb-4">Analysis-Reporting</h4>
+            <ul class="nav flex-column">
+                <!-- Member Analysis -->
+                <li class="nav-item mb-2">
+                    <a class="nav-link active" href="#member-analysis" data-bs-toggle="tab">
+                        <i class="fas fa-users me-2"></i> Member Analysis
+                    </a>
+                    <ul class="nav flex-column submenu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#level-analysis" data-bs-toggle="tab">
+                                <i class="fas fa-layer-group me-2"></i> Level Analysis
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#purchase-pattern" data-bs-toggle="tab">
+                                <i class="fas fa-shopping-cart me-2"></i> Purchase Pattern Analysis
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Marketing Performance -->
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="#marketing-performance" data-bs-toggle="tab">
+                        <i class="fas fa-bullhorn me-2"></i> Marketing Performance
+                    </a>
+                    <ul class="nav flex-column submenu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#campaign-effect" data-bs-toggle="tab">
+                                <i class="fas fa-chart-line me-2"></i> Campaign Effect Analysis
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#channel-performance" data-bs-toggle="tab">
+                                <i class="fas fa-chart-bar me-2"></i> Channel Performance
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Sales Analysis -->
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="#sales-analysis" data-bs-toggle="tab">
+                        <i class="fas fa-chart-pie me-2"></i> Sales Analysis
+                    </a>
+                    <ul class="nav flex-column submenu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#product-sales" data-bs-toggle="tab">
+                                <i class="fas fa-box me-2"></i> Product Sales
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#promotion-sales" data-bs-toggle="tab">
+                                <i class="fas fa-tags me-2"></i> Promotion Sales
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content flex-grow-1 p-4">
+            <div class="tab-content">
+                <!-- Member Analysis Tab -->
+                <div class="tab-pane fade show active" id="member-analysis">
+                    <h3 class="mb-4">Member Analysis Dashboard</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5><i class="fas fa-layer-group me-2"></i> Level-Based Member Statistics</h5>
+                                    <button class="btn btn-sm btn-custom"><i class="fas fa-download me-1"></i> Export Data</button>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="levelAnalysisChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5><i class="fas fa-chart-line me-2"></i> Member Transition Trends</h5>
+                                    <button class="btn btn-sm btn-custom"><i class="fas fa-download me-1"></i> Export Data</button>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="transitionTrendsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Level Analysis Sub-Tab -->
+                <div class="tab-pane fade" id="level-analysis">
+                    <h3 class="mb-4">Level Analysis</h3>
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Member Statistics by Level</h5>
+                            <button class="btn btn-sm btn-custom"><i class="fas fa-download me-1"></i> Export Data</button>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="memberLevelStats"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Purchase Pattern Analysis Sub-Tab -->
+                <div class="tab-pane fade" id="purchase-pattern">
+                    <h3 class="mb-4">Purchase Pattern Analysis</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Customer Purchase Patterns</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="purchasePatternChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Marketing Performance Tab -->
+                <div class="tab-pane fade" id="marketing-performance">
+                    <h3 class="mb-4">Marketing Performance Dashboard</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Campaign ROI and Response Rates</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="campaignEffectChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Channel Engagement Comparison</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="channelPerformanceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Campaign Effect Analysis Sub-Tab -->
+                <div class="tab-pane fade" id="campaign-effect">
+                    <h3 class="mb-4">Campaign Effect Analysis</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Campaign Performance Metrics</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="campaignMetricsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Channel Performance Sub-Tab -->
+                <div class="tab-pane fade" id="channel-performance">
+                    <h3 class="mb-4">Channel Performance</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Performance by Channel</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="channelMetricsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Sales Analysis Tab -->
+                <div class="tab-pane fade" id="sales-analysis">
+                    <h3 class="mb-4">Sales Analysis Dashboard</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Product Sales by Category</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="productSalesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Promotion-Based Sales</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="promotionSalesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Sales Sub-Tab -->
+                <div class="tab-pane fade" id="product-sales">
+                    <h3 class="mb-4">Product Sales</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Sales by Product and Category</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="productSalesMetrics"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- Promotion Sales Sub-Tab -->
+                <div class="tab-pane fade" id="promotion-sales">
+                    <h3 class="mb-4">Promotion Sales</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Sales from Promotions</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="promotionSalesMetrics"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Initialize Tooltips -->
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+    <!-- Chart.js Initialization -->
+    <script>
+        // Level-Based Member Statistics Chart
+        const levelAnalysisCtx = document.getElementById('levelAnalysisChart').getContext('2d');
+        const levelAnalysisChart = new Chart(levelAnalysisCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Silver', 'Gold', 'Platinum'],
+                datasets: [{
+                    data: [300, 500, 200],
+                    backgroundColor: ['#6c757d', '#0d6efd', '#ffc107'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+
+        // Member Transition Trends Chart
+        const transitionTrendsCtx = document.getElementById('transitionTrendsChart').getContext('2d');
+        const transitionTrendsChart = new Chart(transitionTrendsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Transitions',
+                    data: [10, 20, 15, 30, 25, 40, 35],
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Customer Purchase Pattern Chart
+        const purchasePatternCtx = document.getElementById('purchasePatternChart').getContext('2d');
+        const purchasePatternChart = new Chart(purchasePatternCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Skincare', 'Makeup', 'Fragrance', 'Haircare'],
+                datasets: [{
+                    label: 'Purchases',
+                    data: [500, 300, 200, 100],
+                    backgroundColor: ['#198754', '#0d6efd', '#ffc107', '#6c757d'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Campaign Effectiveness Chart
+        const campaignEffectCtx = document.getElementById('campaignEffectChart').getContext('2d');
+        const campaignEffectChart = new Chart(campaignEffectCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['ROI', 'Customer Response', 'A/B Test Success'],
+                datasets: [{
+                    data: [45, 30, 25],
+                    backgroundColor: ['#0d6efd', '#ffc107', '#198754'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+
+        // Channel Performance Comparison Chart
+        const channelPerformanceCtx = document.getElementById('channelPerformanceChart').getContext('2d');
+        const channelPerformanceChart = new Chart(channelPerformanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Email',
+                    data: [60, 75, 70, 80, 90, 85, 95],
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.2)',
+                    fill: true
+                }, {
+                    label: 'SMS',
+                    data: [50, 65, 60, 70, 75, 70, 80],
+                    borderColor: '#ffc107',
+                    backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                    fill: true
+                }, {
+                    label: 'Push Notifications',
+                    data: [40, 50, 45, 60, 65, 60, 70],
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Product Sales Chart
+        const productSalesCtx = document.getElementById('productSalesChart').getContext('2d');
+        const productSalesChart = new Chart(productSalesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Daily', 'Monthly', 'Seasonal'],
+                datasets: [{
+                    label: 'Sales',
+                    data: [120, 340, 560],
+                    backgroundColor: ['#0d6efd', '#ffc107', '#198754'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Promotion Sales Chart
+        const promotionSalesCtx = document.getElementById('promotionSalesChart').getContext('2d');
+        const promotionSalesChart = new Chart(promotionSalesCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Coupon-Based', 'Campaign-Based', 'Channel Contributions'],
+                datasets: [{
+                    data: [30, 50, 20],
+                    backgroundColor: ['#0d6efd', '#ffc107', '#198754'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
